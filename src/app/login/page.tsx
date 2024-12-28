@@ -1,35 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import { LoginHandler } from "./login";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
+    
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:8080/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+    const formData = new FormData(e.currentTarget);
+    const success = await LoginHandler(formData);
 
-      const data = await response.json();
-      if (response.ok) {
-        // Simpan token di cookies
-        document.cookie = `token=${data.data.token}; Path=/; `;
-        document.cookie = `userRole=${data.data.user.role}; Path=/;`;
-        document.cookie = `userId=${data.data.user.id}; Path=/;`;
-        router.push("/home");
-      } else {
-        console.error("Login failed:", data.message);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
+    if (success) {
+      router.push("/home");
     }
   };
 
@@ -51,6 +36,7 @@ export default function page() {
           <input
             id="username"
             type="text"
+            name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
@@ -67,6 +53,7 @@ export default function page() {
           <input
             id="password"
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
