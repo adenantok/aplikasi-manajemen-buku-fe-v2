@@ -1,5 +1,6 @@
 import React from 'react'
 import {GetBooks} from './books';
+import Link from 'next/link';
 
 
 export default async function page() {
@@ -24,6 +25,9 @@ export default async function page() {
               <td className="px-4 py-2 border">{book.author}</td>
               <td className="px-4 py-2 border">{book.description}</td>
               <td className="px-4 py-2 border flex justify-center">
+                <Link href={`/detail/${book.id}`} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4">
+                  View
+                </Link>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
                   Edit
                 </button>
