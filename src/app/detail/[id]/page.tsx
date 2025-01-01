@@ -5,7 +5,7 @@ export default async function Page({params }:any) {
     const id = await params
     const book = await Book(id)
   return (
-    <div className="p-6 bg-gray-50 min-h-screen flex flex-col gap-4">
+    <div className="p-8 container mx-auto">
       <div className="space-y-4 px-4 py-6 bg-white rounded-md border shadow-md">
         {book ? (
           <>
