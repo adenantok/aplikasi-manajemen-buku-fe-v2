@@ -9,6 +9,13 @@ export default async function page() {
   return (
     <>
     <div className="container mx-auto p-8">
+      <div className="flex justify-end mb-4">
+        <Link href="/add">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Add
+          </button>
+        </Link>
+      </div>
       <table className="table-auto w-full border">
         <thead className="bg-gray-200">
           <tr>
