@@ -1,27 +1,27 @@
 "use client"
 
 
-import {AddBook} from './add-book';
+import { AddBook } from './add-book';
 import { useRouter } from 'next/navigation';
 
 
 
 export default function Page() {
 
-    const router = useRouter();
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const success = await AddBook(formData);
-        if (success) {
-            router.push("/home");
-          }
+  const router = useRouter();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const success = await AddBook(formData);
+    if (success) {
+      router.push("/home");
     }
+  }
 
   return (
     <div className='container mx-auto p-8'>
-        
-      <form className='space-y-4'  onSubmit={handleSubmit}>
+
+      <form className='space-y-4' onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title" className='block text-sm font-medium text-gray-700'>Title</label>
           <input type="text" name="title" id="title" className='mt-1 p-2 border border-gray-300 rounded-md w-full' required />
