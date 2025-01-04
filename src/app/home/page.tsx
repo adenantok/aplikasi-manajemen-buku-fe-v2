@@ -1,10 +1,38 @@
-import React from "react";
+"use client"
+import React, { use } from "react";
 import { GetBooks } from "./books";
 import Link from "next/link";
+import { DeleteBook } from "./delete-book";
+import { useEffect, useState } from "react";
 
-export default async function page() {
-  const books = await GetBooks();
 
+type Book = {
+  id: number;
+  user_id: number;
+  title: string;
+  author: string;
+  description: string;
+}
+
+export default function page() {
+  const [books, setBooks] = useState<Book[]>([]);
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const books = await GetBooks();
+      setBooks(books);
+    };
+    fetchBooks();
+  }, []);
+
+    // Handle delete book and update state
+    const handleDelete = async (id: number) => {
+      const success = await DeleteBook(id);
+      if (success) {
+        // Update state to remove the deleted book from the list
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+      }
+    };
+  
   return (
     <>
       <div className="container mx-auto p-8">
@@ -43,7 +71,7 @@ export default async function page() {
                   >
                     Edit
                   </Link>
-                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  <button onClick={() => handleDelete(book.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Delete
                   </button>
                 </td>

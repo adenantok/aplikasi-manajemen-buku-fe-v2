@@ -1,13 +1,9 @@
+"use server"
+
 import { cookies } from "next/headers";
 
-type Book = {
-    id: number;
-    user_id: number;
-    title: string;
-    author: string;
-    description: string;
-  }
-export  async function GetBooks(): Promise<Book[]>  {
+
+export  async function GetBooks()  {
     const token = (await cookies()).get('token')?.value
     const response = await fetch('http://localhost:8080/books', {
         method: 'GET',
