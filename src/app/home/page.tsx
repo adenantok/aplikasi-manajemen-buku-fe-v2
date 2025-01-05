@@ -1,5 +1,4 @@
 "use client"
-import React, { use } from "react";
 import { GetBooks } from "./books";
 import Link from "next/link";
 import { DeleteBook } from "./delete-book";
@@ -14,7 +13,7 @@ type Book = {
   description: string;
 }
 
-export default function page() {
+export default function Page() {
   const [books, setBooks] = useState<Book[]>([]);
   useEffect(() => {
     const fetchBooks = async () => {
@@ -46,6 +45,7 @@ export default function page() {
         <table className="table-auto w-full border">
           <thead className="bg-gray-200">
             <tr>
+              <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Title</th>
               <th className="px-4 py-2 border">Author</th>
               <th className="px-4 py-2 border">Description</th>
@@ -55,6 +55,7 @@ export default function page() {
           <tbody>
             {books.map((book) => (
               <tr className="border-b" key={book.id}>
+                <td className="px-4 py-2 border">{book.id}</td>
                 <td className="px-4 py-2 border">{book.title}</td>
                 <td className="px-4 py-2 border">{book.author}</td>
                 <td className="px-4 py-2 border">{book.description}</td>

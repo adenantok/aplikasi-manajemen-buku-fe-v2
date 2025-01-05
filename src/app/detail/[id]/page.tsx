@@ -1,9 +1,30 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import { Book } from './book'
 
-export default async function Page({ params }: any) {
-  const id = await params
-  const book = await Book(id)
+interface Book  {
+  id: number;
+  title: string;
+  author: string;
+  description: string;
+};
+
+export default  function Page({ params }: { params: Promise<Book> }){
+  
+  const [book, setBook] = useState<Book | null>(null);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      // Panggil fungsi Book untuk mengambil data
+      const fetchedBook = await Book({ id: (await params).id });
+      setBook(fetchedBook); // Simpan data yang diterima ke state
+    };
+
+    fetchBook();
+  }, [params]);
+  
+
   return (
     <div className="p-8 container mx-auto">
       <div className="space-y-4 px-4 py-6 bg-white rounded-md border shadow-md">
