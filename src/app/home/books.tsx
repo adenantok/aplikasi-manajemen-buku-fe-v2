@@ -3,9 +3,9 @@
 import { cookies } from "next/headers";
 
 
-export  async function GetBooks()  {
+export  async function GetBooks(page: number, limit: number)  {
     const token = (await cookies()).get('token')?.value
-    const response = await fetch('http://localhost:8080/books', {
+    const response = await fetch(`http://localhost:8080/books?page=${page}&limit=${limit}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
