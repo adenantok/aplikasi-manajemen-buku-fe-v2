@@ -2,6 +2,7 @@
 import React from "react";
 import { LoginHandler } from "./login";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Page() {
 
@@ -10,10 +11,15 @@ export default function Page() {
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const success = await LoginHandler(formData);
+
+    const success = await signIn("credentials", {
+      redirect: false, username, password });
+
+    // const formData = new FormData(e.currentTarget);
+    // const success = await LoginHandler(formData);
 
     if (success) {
+      console.log("Login successful");
       router.push("/home");
     }
   };
