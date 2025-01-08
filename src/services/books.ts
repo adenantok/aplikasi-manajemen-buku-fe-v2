@@ -1,8 +1,15 @@
 "use server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
 
-export async function GetBooks(page: number, limit: number, accessToken: string | undefined) {
-  const token = accessToken
+export async function GetBooks(page: number, limit: number) {
+  //const token = accessToken
+  const session = await getServerSession(authOptions)
+  const token = session?.accessToken
+
+  //console.log(session)
+  //console.log(token)
   //const token = (await cookies()).get('token')?.value;
   const response = await fetch(`http://localhost:8080/books?page=${page}&limit=${limit}`, {
     method: 'GET',
@@ -16,9 +23,10 @@ export async function GetBooks(page: number, limit: number, accessToken: string 
   return data.data;
 }
 
-export async function AddBook(data: FormData, accessToken: string | undefined, id: number) {
-    const token = accessToken
-    const user_id = id
+export async function AddBook(data: FormData) {
+    const session = await getServerSession(authOptions)
+    const token = session?.accessToken
+    const user_id = session?.user.id
     const title = data.get('title') as string;
     const author = data.get('author') as string;
     const description = data.get('description') as string;
@@ -41,10 +49,9 @@ export async function AddBook(data: FormData, accessToken: string | undefined, i
   return true
 }
 
-export  async function DeleteBook(id: number, accessToken: string | undefined) {
-
-    //const token = (await cookies()).get("token")?.value;
-    const token = accessToken
+export  async function DeleteBook(id: number) {
+    const session = await getServerSession(authOptions)
+    const token = session?.accessToken
     try {
         
         const response = await fetch(`http://localhost:8080/books/${id}`, {

@@ -18,7 +18,7 @@ export default function AddBookPage() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         if (session?.accessToken) {
-            const success = await AddBook(formData, session?.accessToken, session?.user.id);
+            const success = await AddBook(formData);
             if (success) {
                 router.push("/home");
             }

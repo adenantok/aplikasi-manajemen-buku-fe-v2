@@ -26,7 +26,7 @@ export default function BooksList() {
     const fetchBooks = async () => {
       if (session?.accessToken) {
         // Pastikan token dikirimkan ke GetBooks
-        const books = await GetBooks(page, limit, session.accessToken);
+        const books = await GetBooks(page, limit);
         setBooks(books);
         setHasNextPage(books.length === limit); // Sesuaikan dengan respons API yang Anda harapkan
       }
@@ -35,7 +35,7 @@ export default function BooksList() {
   }, [page, session?.accessToken]);
 
   const handleDelete = async (id: number) => {
-    const success = await DeleteBook(id, session?.accessToken);
+    const success = await DeleteBook(id);
     if (success) {
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
     }

@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
-    debug: true,
+const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -43,8 +43,6 @@ const handler = NextAuth({
     secret: process.env.NEXTAUTH_SECRET || "your-secret-key",
     callbacks: {
         async jwt({ token, user }) {
-            //console.log("JWT callback - user:", user);
-            //console.log("JWT callback - token:", token);
             if (user) {
                 token.id = user.id;
                 token.username = user.username;
@@ -54,8 +52,6 @@ const handler = NextAuth({
             return token;
         },
         async session({ session, token }) {
-            //console.log("Session callback - token:", token);
-            //console.log("Session callback - session:", session);
             if (token) {
                 session.user = {
                     id: token.id as number,
@@ -67,11 +63,13 @@ const handler = NextAuth({
             return session;
         },
     },
-    
     pages: {
         signIn: "/login",
         error: "/login", // Redirect ke halaman login jika ada error
     },
-});
+};
 
-export { handler as GET, handler as POST };
+// Ekspor handler untuk NextAuth
+const handler = NextAuth(authOptions);
+export default authOptions
+export { handler as GET, handler as POST, authOptions };
