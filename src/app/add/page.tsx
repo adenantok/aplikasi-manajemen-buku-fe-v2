@@ -1,41 +1,12 @@
 "use client"
+import AddBookPage from '@/components/AddBook'
+import { SessionProvider } from 'next-auth/react'
+import React from 'react'
 
-
-import { AddBook } from './add-book';
-import { useRouter } from 'next/navigation';
-
-
-
-export default function Page() {
-
-  const router = useRouter();
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const success = await AddBook(formData);
-    if (success) {
-      router.push("/home");
-    }
-  }
-
+export default function page() {
   return (
-    <div className='container mx-auto p-8'>
-
-      <form className='space-y-4' onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title" className='block text-sm font-medium text-gray-700'>Title</label>
-          <input type="text" name="title" id="title" className='mt-1 p-2 border border-gray-300 rounded-md w-full' required />
-        </div>
-        <div>
-          <label htmlFor="author" className='block text-sm font-medium text-gray-700'>Author</label>
-          <input type="text" name="author" id="author" className='mt-1 p-2 border border-gray-300 rounded-md w-full' required />
-        </div>
-        <div>
-          <label htmlFor="description" className='block text-sm font-medium text-gray-700'>Description</label>
-          <textarea name="description" id="description" className='mt-1 p-2 border border-gray-300 rounded-md w-full h-40' required></textarea>
-        </div>
-        <button type="submit" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Add</button>
-      </form>
-    </div>
+    <SessionProvider>
+      <AddBookPage />
+    </SessionProvider>
   )
 }

@@ -1,9 +1,10 @@
 "use client";
-import { GetBooks } from "./books";
+
 import Link from "next/link";
-import { DeleteBook } from "./delete-book";
+
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { DeleteBook, GetBooks } from "@/services/books";
 
 type Book = {
   id: number;
@@ -13,7 +14,7 @@ type Book = {
   description: string;
 };
 
-export default function BooksPage() {
+export default function BooksList() {
   const { data: session } = useSession();
 
   const [books, setBooks] = useState<Book[]>([]);
@@ -34,7 +35,7 @@ export default function BooksPage() {
   }, [page, session?.accessToken]);
 
   const handleDelete = async (id: number) => {
-    const success = await DeleteBook(id);
+    const success = await DeleteBook(id, session?.accessToken);
     if (success) {
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
     }
@@ -124,3 +125,7 @@ export default function BooksPage() {
     </div>
   );
 }
+// function DeleteBook(id: number) {
+//     throw new Error("Function not implemented.");
+// }
+
