@@ -78,3 +78,49 @@ export  async function DeleteBook(id: number) {
     }
     return true
 }
+
+export async function EditBook(data: FormData) {
+  const session = await getServerSession(authOptions)
+  const token = session?.accessToken
+    const id = parseInt(data.get("id") as string, 10);
+    
+    const title = data.get("title") as string;
+    const author = data.get("author") as string;
+    const description = data.get("description") as string;
+
+    try {
+        const response = await fetch("http://localhost:8080/books", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${token}`,
+            },
+            body: JSON.stringify({ id, title, author, description }),
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error("Error updating book:", error);
+    }
+
+    return true;
+}
+
+export async function Book(params: { id: number }) {
+  const id = params.id
+  const session = await getServerSession(authOptions)
+  const token = session?.accessToken
+  const response = await fetch('http://localhost:8080/books/' + id, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token}`,
+    },
+  });
+  const data = await response.json();
+  //console.log(data.data);
+
+
+
+  return data.data
+}

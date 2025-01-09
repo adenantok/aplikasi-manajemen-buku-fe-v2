@@ -14,7 +14,7 @@ type Book = {
   description: string;
 };
 
-export default function BooksList() {
+export default function BooksListPage() {
   const { data: session } = useSession();
 
   const [books, setBooks] = useState<Book[]>([]);
@@ -61,7 +61,7 @@ export default function BooksList() {
             <th className="px-4 py-2 border w-[150px]">Title</th>
             <th className="px-4 py-2 border w-[150px]">Author</th>
             <th className="px-4 py-2 border w-[300px]">Description</th>
-            <th className="px-4 py-2 border">Action</th>
+            <th className="px-4 py-2 border w-[100px]">Action</th>
           </tr>
         </thead>
         <tbody>
