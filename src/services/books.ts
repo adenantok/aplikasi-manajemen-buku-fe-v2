@@ -7,7 +7,7 @@ export async function GetBooks(page: number, limit: number) {
   //const token = accessToken
   const session = await getServerSession(authOptions)
   const token = session?.accessToken
-
+  
   //console.log(session)
   //console.log(token)
   //const token = (await cookies()).get('token')?.value;
@@ -19,7 +19,15 @@ export async function GetBooks(page: number, limit: number) {
     },
   });
   const data = await response.json();
-  //console.log(data);
+  console.log(data);
+
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error("Invalid token");
+    }
+    throw new Error(`Failed to fetch books: ${response.statusText}`);
+  }
+
   return data.data;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { DeleteBook, GetBooks } from "@/services/books";
@@ -16,7 +16,7 @@ type Book = {
 
 export default function BooksListPage() {
   const { data: session } = useSession();
-
+  const router = useRouter();
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
@@ -24,15 +24,21 @@ export default function BooksListPage() {
 
   useEffect(() => {
     const fetchBooks = async () => {
-      if (session?.accessToken) {
-        // Pastikan token dikirimkan ke GetBooks
-        const books = await GetBooks(page, limit);
-        setBooks(books);
-        setHasNextPage(books.length === limit); // Sesuaikan dengan respons API yang Anda harapkan
+      try {
+        if (session?.accessToken) {
+          const books = await GetBooks(page, limit);
+          setBooks(books);
+          setHasNextPage(books.length === limit);
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        if (error instanceof Error && error.message === "Invalid token") {
+          router.push("/login"); // Arahkan ke halaman login
+        }
       }
     };
     fetchBooks();
-  }, [page, session?.accessToken]);
+  }, [page, session?.accessToken, router]);
 
   const handleDelete = async (id: number) => {
     const success = await DeleteBook(id);
