@@ -10,26 +10,33 @@ import { useRouter } from 'next/navigation';
 export default function AddBookPage() {
 
     const { data: session } = useSession();
-    //console.log(session?.user)
-    //console.log(session?.user.id)
 
     const router = useRouter();
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        console.log("Form Data:", Array.from(formData.entries())); // Log semua data form
+        console.log(formData)
         if (session?.accessToken) {
-            const success = await AddBook(formData);
-            if (success) {
-                router.push("/home");
+            try {
+              const success = await AddBook(formData);
+              if (success) {
+                router.push("/home"); // Arahkan ke halaman home setelah berhasil menambahkan buku
+              }
+            } catch (error) {
+              console.error("Error adding book:", error);
+              // Menampilkan pesan kesalahan jika perlu
             }
-        }
-
+          }
     }
 
     return (
         <div className='container mx-auto p-8'>
 
             <form className='space-y-4' onSubmit={handleSubmit}>
+                {session?.user?.id && (
+                    <input type="hidden" name="user_id" value={session.user.id} />
+                ) }
                 <div>
                     <label htmlFor="title" className='block text-sm font-medium text-gray-700'>Title</label>
                     <input type="text" name="title" id="title" className='mt-1 p-2 border border-gray-300 rounded-md w-full' required />
