@@ -4,6 +4,7 @@
 import React from "react";
 import EditBookPage from "@/components/EditBook";
 import NavBar from "@/components/NavBar";
+import { SessionProvider } from "next-auth/react";
 interface Params {
   id: string;
 }
@@ -11,8 +12,10 @@ interface Params {
 export default function Page({ params }: { params: Promise<Params> }) {
   return (
     <>
-      <NavBar />
-      <EditBookPage params={params} />
+      <SessionProvider>
+        <NavBar />
+        <EditBookPage params={params} />
+      </SessionProvider>
     </>
   );
 }

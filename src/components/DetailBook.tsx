@@ -1,7 +1,9 @@
 "use client"
 
 import { Book } from '@/services/books';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
 
 
 interface Book  {
@@ -12,18 +14,31 @@ interface Book  {
 };
 
 export default  function Page({ params }: { params: Promise<Book> }){
-  
+  const { data: session } = useSession();
   const [book, setBook] = useState<Book | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBook = async () => {
       // Panggil fungsi Book untuk mengambil data
-      const fetchedBook = await Book({ id: (await params).id });
-      setBook(fetchedBook); // Simpan data yang diterima ke state
+      // const fetchedBook = await Book({ id: (await params).id });
+      // setBook(fetchedBook); // Simpan data yang diterima ke state
+      try {
+        if (session?.accessToken) {
+          const book = await Book({ id: (await params).id });
+          setBook(book);
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        if (error instanceof Error && error.message === "Invalid token") {
+          router.push("/login"); // Arahkan ke halaman login
+        }
+      }
+      
     };
 
     fetchBook();
-  }, [params]);
+  }, [params, session?.accessToken, router]);
   
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 import { EditBook } from "@/services/books";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -12,6 +13,7 @@ export default function EditBookPage({ params }: { params: Promise<Params> }) {
   const paramsData = React.use(params);
   const id = paramsData.id;
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,15 +22,18 @@ export default function EditBookPage({ params }: { params: Promise<Params> }) {
 
     // Tambahkan ID ke FormData
     formData.append("id", id);
-
-    // Panggil fungsi untuk update data
-    const success = await EditBook(formData);
-
-    if (success) {
-      // Redirect ke halaman home jika berhasil
-      router.push("/home");
-    } else {
-      console.error("Update failed");
+    if (session?.accessToken) {
+      try {
+        const success = await EditBook(formData);
+        if (success) {
+          router.push("/home"); // Arahkan ke halaman home setelah berhasil menambahkan buku
+        }
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        if (error instanceof Error && error.message === "Invalid token") {
+          router.push("/login"); // Arahkan ke halaman login
+        }
+      }
     }
   };
 

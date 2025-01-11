@@ -15,19 +15,21 @@ export default function AddBookPage() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        console.log("Form Data:", Array.from(formData.entries())); // Log semua data form
-        console.log(formData)
+        //console.log("Form Data:", Array.from(formData.entries())); // Log semua data form
+        //console.log(formData)
         if (session?.accessToken) {
             try {
-              const success = await AddBook(formData);
-              if (success) {
-                router.push("/home"); // Arahkan ke halaman home setelah berhasil menambahkan buku
-              }
+                const success = await AddBook(formData);
+                if (success) {
+                    router.push("/home"); // Arahkan ke halaman home setelah berhasil menambahkan buku
+                }
             } catch (error) {
-              console.error("Error adding book:", error);
-              // Menampilkan pesan kesalahan jika perlu
+                console.error("Error fetching books:", error);
+                if (error instanceof Error && error.message === "Invalid token") {
+                    router.push("/login"); // Arahkan ke halaman login
+                }
             }
-          }
+        }
     }
 
     return (
@@ -36,7 +38,7 @@ export default function AddBookPage() {
             <form className='space-y-4' onSubmit={handleSubmit}>
                 {session?.user?.id && (
                     <input type="hidden" name="user_id" value={session.user.id} />
-                ) }
+                )}
                 <div>
                     <label htmlFor="title" className='block text-sm font-medium text-gray-700'>Title</label>
                     <input type="text" name="title" id="title" className='mt-1 p-2 border border-gray-300 rounded-md w-full' required />
